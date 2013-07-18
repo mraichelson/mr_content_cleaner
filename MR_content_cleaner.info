@@ -1,0 +1,5 @@
+name = "MR Content Cleaner"
+description = "Parses empty paragraph tags out of filtered content."
+core = 7.x
+package = "Input Filters"
+dependencies[] = filter

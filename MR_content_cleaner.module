@@ -1,0 +1,34 @@
+<?php
+/**
+ * @file
+ * Implements a custom text filter for stripping out empty paragraph tags.
+ */
+
+/* Implements hook_filter_info(). */
+function mr_content_cleaner_filter_info() {
+  $filters['kill_empty'] = array(
+    'title' => t('Strip Empty Paragraphs'),
+    'description' => t('Remove paragraphs that contain only whitespace (including line breaks and &amp;nbsp;\'s) that are often inserted by content editors using WYSIWYGs.'),
+    'process callback'  => '_mr_content_cleaner_kill_empty',
+    'tips callback' => '_mr_content_cleaner_kill_empty_tips',
+  );
+  return $filters;
+}
+
+/* Process callbacks, where the work is done. */
+function _mr_content_cleaner_kill_empty($text, $filter) {
+  // Remove all <p> tags containing only nbsp's, white space, or nothing.
+  return preg_replace('/<p[^>]*>(&nbsp;|\s)*<\/p>/', '', $text);
+}
+
+/* Tips for the content editor. */
+function _mr_content_cleaner_kill_empty_tips($filter, $format, $long = FALSE) {
+  if (!$long) {
+    // This string will be shown in the content add/edit form.
+    return t('Use one [enter] to create a new paragraph. More than one will be ignored.');
+  }
+  else {
+    // And this one on the "Filter Tips" page.
+    return t('To maintain consistancy in content display, empty paragraphs inserted by WYSIWYG editors will be removed.');
+  }
+}
